@@ -14,15 +14,6 @@ const environments = {
     dialect: 'postgres',
     logging: process.env.DB_LOGGING === 'true' ? console.log : false,
   },
-  test: {
-    username: process.env.DB_USERNAME_TEST || process.env.DB_USERNAME || 'postgres',
-    password: process.env.DB_PASSWORD_TEST || process.env.DB_PASSWORD || null,
-    database: process.env.DB_NAME_TEST || `${process.env.DB_NAME || 'hapi_project_dev'}_test`,
-    host: process.env.DB_HOST_TEST || process.env.DB_HOST || '127.0.0.1',
-    port: parseInt(process.env.DB_PORT_TEST, 10) || 5432,
-    dialect: 'postgres',
-    logging: false,
-  },
   production: {
     username: process.env.DB_USERNAME_PROD,
     password: process.env.DB_PASSWORD_PROD,
@@ -32,7 +23,7 @@ const environments = {
     dialect: 'postgres',
     logging: false,
     dialectOptions: {
-      ssl: { 
+      ssl: {
         require: true,
         rejectUnauthorized: false
       }
@@ -40,18 +31,15 @@ const environments = {
   }
 };
 
-const activeDBConfig = environments[env];
+const activeDBConfig = environments[env] || environments.development;
 
 const appConfig = {
   env: env,
-
   server: {
     port: parseInt(process.env.PORT, 10) || 3000,
     host: process.env.HOST || (env === 'production' ? '0.0.0.0' : 'localhost'),
   },
-
   database: activeDBConfig,
-
   environments: environments
 };
 
